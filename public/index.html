@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TinyLink Dashboard</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: #f4f6fb;
+        color: #0f172a;
+        margin: 0;
+      }
+      a {
+        color: #2563eb;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .app {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem 3rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      h1 {
+        font-size: 2rem;
+        margin: 0;
+      }
+      p.lead {
+        margin: 0.25rem 0 0;
+        color: #475467;
+      }
+      .card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 15px 35px rgba(15, 23, 42, 0.1);
+      }
+      form {
+        display: grid;
+        gap: 0.75rem;
+      }
+      label {
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+      input {
+        width: 100%;
+        border: 1px solid #d0d5dd;
+        border-radius: 10px;
+        padding: 0.65rem 0.9rem;
+        font-size: 0.95rem;
+        transition: border-color 0.2s ease;
+      }
+      input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+      }
+      button {
+        border: none;
+        border-radius: 999px;
+        padding: 0.65rem 1.4rem;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: transform 0.15s ease, opacity 0.3s ease;
+      }
+      button.primary {
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        color: #fff;
+      }
+      button.secondary {
+        background: #e4e7ec;
+        color: #111827;
+      }
+      button.ghost {
+        border: 1px solid #d0d5dd;
+        background: transparent;
+        color: #1d4ed8;
+      }
+      button.small {
+        padding: 0.45rem 1rem;
+        font-size: 0.85rem;
+      }
+      button:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+      button:not(:disabled):hover {
+        transform: translateY(-1px);
+      }
+      button.icon {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-weight: 600;
+      }
+      button.icon svg {
+        width: 1rem;
+        height: 1rem;
+      }
+      button.ghost.danger {
+        border-color: #fecaca;
+        color: #b91c1c;
+      }
+      button.ghost.danger:hover {
+        background: #fee2e2;
+      }
+      .status {
+        min-height: 1.25rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+      .status.success {
+        color: #047857;
+      }
+      .status.error {
+        color: #dc2626;
+      }
+      .list-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .search-group {
+        display: flex;
+        gap: 0.5rem;
+        width: min(420px, 100%);
+      }
+      .search-group input {
+        flex: 1;
+      }
+      .table-wrapper {
+        border: 1px solid #e4e7ec;
+        border-radius: 14px;
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+      }
+      th,
+      td {
+        padding: 0.85rem 1rem;
+        text-align: left;
+      }
+      th {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #5f6b7c;
+        border-bottom: 1px solid #e4e7ec;
+      }
+      tbody tr {
+        border-bottom: 1px solid #f1f3f8;
+      }
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      tbody tr:hover {
+        background: #f9fafc;
+      }
+      .table-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.25rem 0.7rem;
+        border-radius: 999px;
+        background: rgba(37, 99, 235, 0.1);
+        color: #1d4ed8;
+        font-weight: 600;
+      }
+      .muted {
+        color: #64748b;
+        font-size: 0.85rem;
+      }
+      .empty {
+        text-align: center;
+        padding: 2rem 1rem;
+        color: #64748b;
+      }
+      @media (max-width: 640px) {
+        .app {
+          padding: 1.5rem 1rem 2rem;
+        }
+        .search-group {
+          flex-direction: column;
+        }
+        .actions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        button {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="app">
+      <header class="card">
+        <h1>TinyLink Dashboard</h1>
+        <p class="lead">Create, search, and manage short links in one clean view.</p>
+      </header>
+
+      <section class="card">
+        <form id="createForm">
+          <div>
+            <label for="target">Destination URL</label>
+            <input id="target" type="url" placeholder="https://example.com/very/long/url" required />
+          </div>
+          <div>
+            <label for="code">Custom code (optional)</label>
+            <input id="code" maxlength="8" placeholder="6-8 characters, letters or numbers" />
+          </div>
+          <div class="actions">
+            <button id="createBtn" type="submit" class="primary">Create link</button>
+            <p class="status" id="formStatus" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="list-header">
+          <div>
+            <h2 style="margin: 0 0 0.25rem">Your links</h2>
+            <p class="muted">Filter by code or target URL, then manage with one click.</p>
+          </div>
+          <div class="search-group">
+            <input id="search" type="search" placeholder="Search code or URL" autocomplete="off" />
+            <button type="button" id="clearSearch" class="secondary">Clear</button>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Destination</th>
+                <th>Clicks</th>
+                <th>Last Clicked</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="links"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
